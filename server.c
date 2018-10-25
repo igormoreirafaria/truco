@@ -14,9 +14,9 @@ int main(int argc, char const *argv[]){
 	server_t server = { 0 };
 
 	err = server_listen(&server);
+
 	if (err) {
-		printf("Failed to listen on address 0.0.0.0:%d\n", 
-                        PORT);
+		printf("Failed to listen on address 0.0.0.0:0808");
 		return err;
 	}
 
@@ -28,7 +28,25 @@ int main(int argc, char const *argv[]){
 		}
 	}
 
+	err = (server->listen_fd = socket(AF_INET, SOCK_STREAM, 0));
+	if (err == -1) {
+		perror("socket");
+		printf("Failed to create socket endpoint\n");
+		return err;
+	}
+	err = write(server->listen_fd, "hey", 3);
+    if (err == -1) {
+            perror("write");
+            printf("failed to write\n");
+            return err;
+    }
 
+    struct sockaddr_in server_addr = { 0 };
+
+    server_addr.sin_family = AF_INET;
+
+    server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	server_addr.sin_port = htons(PORT);
 
 	return 0;
 }
