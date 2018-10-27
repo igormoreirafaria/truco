@@ -4,7 +4,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <pthread.h>
-
+#include <arpa/inet.h> //inet_addr
+#include <string.h>
 typedef struct{
     char valor;
     char naipe;
@@ -15,9 +16,10 @@ int main(int argc , char *argv[]){
 	int sock;
     struct sockaddr_in servidor;
     int id_jogador;
-    char buf[2];
+    char *buf;
+    buf = malloc(4 * sizeof(char));
 
-    printf("Qual seu id de jogador");
+    printf("Qual seu id de jogador: ");
     scanf("%d", &id_jogador);
     //Cria um socket
 
@@ -26,13 +28,13 @@ int main(int argc , char *argv[]){
     if (sock == -1){
         printf("nao foi possivel criar o socket");
     }
-    printf("Socket criado");
+    printf("Socket criado\n");
 
 
 
     servidor.sin_addr.s_addr = inet_addr("127.0.0.1");
     servidor.sin_family = AF_INET;
-    servidor.sin_port = htons( atoi(argv[1]));
+    servidor.sin_port = htons( 8081 );
 
     //conectar a um servidor
     if (connect(sock , (struct sockaddr *)&servidor , sizeof(servidor)) < 0) {
@@ -43,22 +45,21 @@ int main(int argc , char *argv[]){
     for(;;){
         carta jogada;
         for(;id_jogador > 0; id_jogador --){
-            recv(sock, buf, 2, 0);
-            jogada.valor = buf[0];
-            jogada.naipe = buf[1];
-            printf("%d %c \n", jogada.valor, jogada.naipe);
+            recv(sock, buf, 4, 0);
+            
+            printf("%s\n", buf);
         }
-        printf("Digite sua carta\n");
-        scanf("%d %c\n", &jogada.valor, &jogada.naipe);
-        buf[0] = jogada.valor;
-        buf[1] = jogada.naipe;
+        printf("Digite sua carta: ");
+        fgets(buf, 4, stdin);
+        buf[strlen(buf)] = '\0';
+        fgets(buf, 4, stdin);
+        buf[strlen(buf)] = '\0';
 
-        send(sock, buf, 2, 0);
+        send(sock, buf, 4, 0);
 
-        recv(sock, buf, 2, 0);
-        jogada.valor = buf[0];
-        jogada.naipe = buf[1];
-        printf("Sua carta: %d %c \n", jogada.valor, jogada.naipe);
+        recv(sock, buf, 4, 0);
+   
+        printf("Sua carta: %s\n", buf);
 
         id_jogador = 3;
     }
