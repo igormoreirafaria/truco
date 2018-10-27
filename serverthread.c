@@ -29,7 +29,7 @@ void * thread_enviada(void * arg) {
                 exit(1);
             }
             ultima_enviada[jogador].valor = '-';
-            ultima_recebida[jogador].naipe = '-';        }
+            ultima_enviada[jogador].naipe = '-';        }
 	}
     close(conexao[jogador]);
 	return NULL;
@@ -51,6 +51,14 @@ void * thread_recebida(void * arg){
 	return NULL;
 }
 
+/*int maior(carta carta1, carta carta2){
+    if(carta1.valor = 4 && carta1.naipe = p) return 1;
+    if(carta2.valor = 4 && carta2.naipe = p) return 2;
+
+    if(carta1.valor = 4 && carta1.naipe = p) return 1;
+    if(carta2.valor = 4 && carta2.naipe = p) return 2;
+
+}*/
 
 
 int main(){
@@ -80,8 +88,9 @@ int main(){
 
 
     int turno_atual = 0;
+    int pontuacao1 = 0, pontuacao2 = 0;
     //jogo
-    for(;;){
+    while(pontuacao1 < 12 || pontuacao2 < 12){
         if(atual[turno_atual].valor != '-'){
             for(int i = 0; i < 4; i++){
                 ultima_enviada[i].valor = atual[turno_atual].valor;
