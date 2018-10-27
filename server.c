@@ -1,13 +1,14 @@
 #include "server.h"
-#include<stdio.h>
-#include<string.h>    //strlen
-#include<sys/socket.h>
-#include<arpa/inet.h> //inet_addr
-#include<unistd.h>    //write
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>    //strlen
+#include <sys/socket.h>
+#include <arpa/inet.h> //inet_addr
+#include <unistd.h>    //write
  
 int main(int argc , char *argv[]){
    
-    int socket_desc , client_sock , c , read_size;
+    int socket_desc , client_sock , c , read_size, *new_sock;
     struct sockaddr_in server , client;
     char client_message[2000];
 
@@ -31,6 +32,7 @@ int main(int argc , char *argv[]){
     }
     puts("Ligacao feita");
 
+  
     //servidor fica escutando no socket
     listen(socket_desc , 3);
 
@@ -40,30 +42,25 @@ int main(int argc , char *argv[]){
 
     //aceita conexão de um cliente futuro
     client_sock = accept(socket_desc, (struct sockaddr *)&client, (socklen_t*)&c);
-    if (client_sock < 0)
-    {
+    if (client_sock < 0){
         perror("conexao falhou");
         return 1;
     }
     puts("Conexao aceita");
 
     //recebe mensagem do cliente
-    while( (read_size = recv(client_sock , client_message , 2000 , 0)) > 0 )
-    {
+    while( (read_size = recv(client_sock , client_message , 2000 , 0)) > 0 ){
         //retorna mensagem pro cliente
-        write(client_sock , client_message , strlen(client_message));
-        write(client_sock , client_message , 1);
+        write(client_sock , client_message , strlen(client_message)+1);
     }
      
-    if(read_size == 0)
-    {
+    if(read_size == 0){
         puts("Cliente disconectou");
         fflush(stdout);
-    }
-    else if(read_size == -1)
-    {
+    }else 
+    if(read_size == -1){
         perror("falha ao receber");
     }
-
+	
     return 0;
 }

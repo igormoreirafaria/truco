@@ -2,7 +2,7 @@
 #include<string.h>    //strlen
 #include<sys/socket.h>    //socket
 #include<arpa/inet.h> //inet_addr
- 
+#include <unistd.h>
 int main(int argc , char *argv[]){
     
 	int sock;
@@ -11,8 +11,7 @@ int main(int argc , char *argv[]){
 
     //Cria um socket
     sock = socket(AF_INET , SOCK_STREAM , 0);
-    if (sock == -1)
-    {
+    if (sock == -1){
         printf("nao foi possivel criar o socket");
     }
     puts("Socket criado");
@@ -22,8 +21,7 @@ int main(int argc , char *argv[]){
     server.sin_port = htons( 8080 );
 
     //conectar a um servidor
-    if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0)
-    {
+    if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0){
         perror("Erro, nao foi possivel conectar ao servidor.");
         return 1;
     }
@@ -31,13 +29,12 @@ int main(int argc , char *argv[]){
     puts("Connected\n");
 
     //continuar comunicacao com o servidor
-    while(1)
-    {
+    while(1){
         printf("Enter message : ");
         scanf("%s" , message);
          
         //envia dados
-        if( send(sock , message , strlen(message) , 0) < 0)
+        if( send(sock , message , strlen(message)+1 , 0) < 0)
         {
             puts("falha ao enviar");
             return 1;
@@ -54,7 +51,7 @@ int main(int argc , char *argv[]){
         puts(server_reply);
     }
      
-    //close(sock);
+    close(sock);
 
     return 0;
 }

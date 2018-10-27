@@ -12,6 +12,7 @@ typedef struct{
 
 carta atual[4]; //carta a ser recebida
 carta ultima_enviada[4]; //ultima carta recebida
+carta ultima_recebida[4]; //ultima carta recebida
 intptr_t conexao[4]; //jogador
 
 void * thread_enviada(void * arg) {
@@ -52,7 +53,7 @@ void * thread_recebida(void * arg){
 
 
 
-int main(void) {
+int main(){
 
     int jogadores[4] = {0, 1, 2, 3};
 
@@ -97,6 +98,6 @@ int main(void) {
         }
     }
 
-    printf("%d ", sizeof(carta));
+    printf("%ld ", sizeof(carta));
 	return 0;
 }
