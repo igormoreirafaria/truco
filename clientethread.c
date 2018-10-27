@@ -49,7 +49,7 @@ int main(int argc , char *argv[]){
             printf("%d %c \n", jogada.valor, jogada.naipe);
         }
         printf("Digite sua carta\n");
-        scanf("%d %c\n", &jogada.valor, &jogada.naipe);
+        scanf("%c %c\n", &jogada.valor, &jogada.naipe);
         buf[0] = jogada.valor;
         buf[1] = jogada.naipe;
 
