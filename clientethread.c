@@ -46,7 +46,7 @@ int main(int argc , char *argv[]){
             recv(sock, buf, 2, 0);
             jogada.valor = buf[0];
             jogada.naipe = buf[1];
-            printf("%d %c \n", jogada.valor, jogada.naipe);
+            printf("%c %c \n", jogada.valor, jogada.naipe);
         }
         printf("Digite sua carta\n");
         scanf("%c %c\n", &jogada.valor, &jogada.naipe);
@@ -58,7 +58,7 @@ int main(int argc , char *argv[]){
         recv(sock, buf, 2, 0);
         jogada.valor = buf[0];
         jogada.naipe = buf[1];
-        printf("Sua carta: %d %c \n", jogada.valor, jogada.naipe);
+        printf("Sua carta: %c %c \n", jogada.valor, jogada.naipe);
 
         id_jogador = 3;
     }
