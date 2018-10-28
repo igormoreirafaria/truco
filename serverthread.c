@@ -65,8 +65,11 @@ int main(void) {
   int jogadores[4] = {0, 1, 2, 3};
 
   int escuta = socket(AF_INET, SOCK_STREAM, 0);
-  if(escuta < 0) return 1;
-
+  if(escuta < 0){
+    printf("erro  ao criar socket\n");
+    return 1;
+  }
+  printf("socket criado\n");
 
   struct sockaddr_in endereco;
   socklen_t tamanho_endereco = sizeof(endereco);
@@ -78,10 +81,16 @@ int main(void) {
 
 
 
-  if (bind(escuta, (struct sockaddr *) &endereco, (socklen_t)tamanho_endereco) < 0) return 1;
-  printf("Escutando na porta: %d\n", htons(endereco.sin_port));
+  if (bind(escuta, (struct sockaddr *) &endereco, (socklen_t)tamanho_endereco) < 0) {
+    return 1;
+  }
+  printf("bind feito\n");
 
-  if(listen(escuta, 100) < 0) return 1;
+  if(listen(escuta, 100) < 0){
+    printf("erro ao executar listen\n");
+    return 1;
+  } 
+  printf("Escutando na porta: %d\n", htons(endereco.sin_port));
   for (int i = 0; i < 4; i++) {
     conexao[i] = accept(escuta, NULL, NULL);
     pthread_t thread_envia, thread_recebe;
@@ -92,7 +101,7 @@ int main(void) {
     if(pthread_create(&thread_envia, NULL, thread_enviada, (void*) &(jogadores[i])) != 0) return 1;
     if(pthread_create(&thread_recebe, NULL, thread_recebida, (void*) &(jogadores[i])) != 0) return 1;
   }
-  
+
 
   int turno_atual = 0;
   for(;;){
@@ -118,4 +127,4 @@ int main(void) {
   }
 
   return 0;
-}
+  }
