@@ -9,7 +9,8 @@
 #include<arpa/inet.h> //inet_addr
 #include<unistd.h>    //write
 #include<pthread.h> //for threading , link with lpthread
-#include <time.h>
+#include<time.h>
+#include"truco.c"
 
 typedef struct{
     char valor;
@@ -20,10 +21,10 @@ typedef struct{
 void *connection_handler(void *);
 
 int check_recursivo(Carta *baralho);
-
+Carta vetor_de_cartas[4];
 int client_sock[4];
 Carta *baralho;
-
+int cont = 0;
 int main(int argc , char *argv[])
 {
     int socket_desc , c , *new_sock;
@@ -40,7 +41,7 @@ int main(int argc , char *argv[])
     //Prepare the sockaddr_in structure
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
-    server.sin_port = htons( 8080 );
+    server.sin_port = htons( 8081 );
      
     //Bind
     if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0)
@@ -190,6 +191,7 @@ void *connection_handler(void *socket_desc)
     int sock = *(int*)socket_desc;
     int read_size;
     char *message , *client_message, **client_cards;
+    message = calloc(sizeof(char), 2000);
     client_message = calloc(sizeof(char), 2000);
     client_cards = malloc(4 * sizeof(char*));
     for(int i = 0 ; i < 4 ; i++){
@@ -220,11 +222,27 @@ void *connection_handler(void *socket_desc)
     }
 
     
+    char *token;
     //Receive a message from client
+    
+
+
     while( (read_size = recv(sock , client_message , 2000 , 0)) > 0 )
     {
         //printf("teste 1 server %s\n", client_message);
         //Send the message back to client
+        strcpy(message, client_message);
+        token = strtok(message, " ");
+        
+        vetor_de_cartas[cont].valor = token[0];
+
+        token = strtok(NULL, " ");
+        vetor_de_cartas[cont].naipe = token[0];
+        message = calloc(sizeof(char), 2000);    
+        
+        //printf("valor %c naipe %c\n", vetor_de_cartas[cont].valor, vetor_de_cartas[cont].naipe);
+
+        
 
         for(int i = 0 ; i < 4 ; i++){
 
@@ -232,6 +250,14 @@ void *connection_handler(void *socket_desc)
         
         }
         client_message = calloc(sizeof(char), 2000);
+        cont++;
+        printf("%d\n", cont);
+        if(cont == 4){
+            for(int i = 0 ; i < 4 ; i++){
+                printf("valor %c naipe %c\n", vetor_de_cartas[i].valor, vetor_de_cartas[i].naipe);
+            }
+            cont = 0;
+        }
     }
      
     if(read_size == 0)
