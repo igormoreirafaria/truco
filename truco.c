@@ -1,4 +1,3 @@
-
 int turno = 0; // global
 int round_dupla1 = 0;
 int round_dupla2 = 0;
@@ -6,6 +5,8 @@ int pontuacao_dupla1 = 0;
 int pontuacao_dupla2 = 0;
 int flag_vitoria_segundo_turno = 0;
 int baralho_tranformado[4];
+int vencedor_turno1;
+int empate;
 
 typedef struct{
     char valor;
@@ -33,9 +34,9 @@ void selection_sort (int *a, int n) {
   }
 }
 
-void tranforma_carta(Carta *vetor_cartas[4]){
+void tranforma_carta(Carta vetor_cartas[4]){
 
-  for (size_t i = 0; i < 4; i++) {
+  for (int i = 0; i < 4; i++) {
     if (vetor_cartas[i].valor == '4' && vetor_cartas[i].naipe == 'p') {
       baralho_tranformado[i]=14;
       rodada[i].id_jogador = i;
@@ -106,12 +107,12 @@ void regras(Carta vetor_cartas[4]){
   if (baralho_tranformado[3] == baralho_tranformado[2]) {
     empate = 1;
   }else{
-    for (size_t i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
       if (baralho_tranformado[3] == rodada[i].carta_tranformada) {
         id_jogador = rodada[i].id_jogador;
       }
     }
-    for (size_t i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++) {
       baralho_tranformado[i] == 0;
       rodada[i].id_jogador = 0;
       rodada[i].carta_tranformada = 0;
@@ -153,7 +154,6 @@ void regras(Carta vetor_cartas[4]){
       flag_vitoria_segundo_turno = 1;
     }
     turno = 0;
-    break;
   }
   if (round_dupla2 = 2) {
     pontuacao_dupla2 +=2;
@@ -163,6 +163,5 @@ void regras(Carta vetor_cartas[4]){
       flag_vitoria_segundo_turno = 1;
     }
     turno = 0;
-    break;
   }
 }
