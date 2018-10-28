@@ -1,5 +1,5 @@
-target: serverthread.c
-	gcc serverthread.c -pthread -o server
+target: serverthread.c truco.c
+	gcc serverthread.c truco.c -pthread -o server
 
 client: cliente.c
 	gcc clientethread.c -pthread -o cliente

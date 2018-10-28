@@ -1,17 +1,15 @@
-int turno = 0; // global
+#include "server.h"
+
 int round_dupla1 = 0;
 int round_dupla2 = 0;
-int pontuacao_dupla1 = 0;
-int pontuacao_dupla2 = 0;
-int flag_vitoria_segundo_turno = 0;
 int baralho_tranformado[4];
 int vencedor_turno1;
 int empate;
+int turno = 0; // global
+int pontuacao_dupla1 = 0;
+int pontuacao_dupla2 = 0;
+int flag_vitoria_segundo_turno = 0;
 
-typedef struct{
-    char valor;
-    char naipe;
-}Carta;
 
 typedef struct{
   int id_jogador;
@@ -97,7 +95,13 @@ void tranforma_carta(Carta vetor_cartas[4]){
   }
 }
 
-
+int retorna_vencedor(){
+  if (round_dupla1 == 2) {
+    return 1;
+  }else if (round_dupla2 == 2) {
+    return 2;
+  }
+}
 
 void regras(Carta vetor_cartas[4]){
 
@@ -145,23 +149,5 @@ void regras(Carta vetor_cartas[4]){
       round_dupla2=1;
       round_dupla1=1;
     }
-  }
-  if (round_dupla1 = 2) {
-    pontuacao_dupla1 +=2;
-    round_dupla1 = 0;
-    round_dupla2 = 0;
-    if (turno = 2) {
-      flag_vitoria_segundo_turno = 1;
-    }
-    turno = 0;
-  }
-  if (round_dupla2 = 2) {
-    pontuacao_dupla2 +=2;
-    round_dupla1 = 0;
-    round_dupla2 = 0;
-    if (turno = 2) {
-      flag_vitoria_segundo_turno = 1;
-    }
-    turno = 0;
   }
 }

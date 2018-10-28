@@ -10,13 +10,7 @@
 #include<unistd.h>    //write
 #include<pthread.h> //for threading , link with lpthread
 #include<time.h>
-#include"truco.c"
-
-typedef struct{
-    char valor;
-    char naipe;
-}Carta;
- 
+#include "server.h" 
 //the thread function
 void *connection_handler(void *);
 
@@ -224,7 +218,9 @@ void *connection_handler(void *socket_desc)
     
     char *token;
     //Receive a message from client
-    
+    int dupla;
+    int dupla1=0;
+    int dupla2=0;
 
 
     while( (read_size = recv(sock , client_message , 2000 , 0)) > 0 )
@@ -256,6 +252,14 @@ void *connection_handler(void *socket_desc)
             for(int i = 0 ; i < 4 ; i++){
                 printf("valor %c naipe %c\n", vetor_de_cartas[i].valor, vetor_de_cartas[i].naipe);
             }
+            regras(vetor_de_cartas);
+            dupla = retorna_vencedor();
+            if(dupla == 1){
+                dupla1 = dupla1 + 2;
+            }else if(dupla == 2){
+                dupla2 = dupla2 + 2;
+            }
+            
             cont = 0;
         }
     }
