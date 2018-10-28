@@ -4,7 +4,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <pthread.h>
-
+#include <arpa/inet.h> //inet_addr
 typedef struct{
     char valor;
     char naipe;
@@ -22,7 +22,7 @@ int main(int argc , char *argv[]){
 
     servidor.sin_addr.s_addr = inet_addr("127.0.0.1");
     servidor.sin_family = AF_INET;
-    servidor.sin_port = htons(atoi(argv[1]));
+    servidor.sin_port = htons(8080);
 
     if (connect(sock, (struct sockaddr *)&servidor, sizeof(servidor)) < 0) return 1;
 

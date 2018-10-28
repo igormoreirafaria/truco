@@ -4,6 +4,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <pthread.h>
+#include <arpa/inet.h> //inet_addr
+
 
 typedef struct{
     char valor;
@@ -63,16 +65,23 @@ int main(void) {
   int jogadores[4] = {0, 1, 2, 3};
 
   int escuta = socket(AF_INET, SOCK_STREAM, 0);
-
   if(escuta < 0) return 1;
-  if(listen(escuta, 100) < 0) return 1;
+
 
   struct sockaddr_in endereco;
   socklen_t tamanho_endereco = sizeof(endereco);
 
-  if (getsockname(escuta, (struct sockaddr *) &endereco, &tamanho_endereco) < 0) return 1;
-  printf("Escutando na porta: %d\n", ntohs(endereco.sin_port));
+  endereco.sin_addr.s_addr = inet_addr("127.0.0.1");
+  endereco.sin_family = AF_INET;
+  endereco.sin_port = htons(8080);
 
+
+
+
+  if (bind(escuta, (struct sockaddr *) &endereco, (socklen_t)tamanho_endereco) < 0) return 1;
+  printf("Escutando na porta: %d\n", htons(endereco.sin_port));
+
+  if(listen(escuta, 100) < 0) return 1;
   for (int i = 0; i < 4; i++) {
     conexao[i] = accept(escuta, NULL, NULL);
     pthread_t thread_envia, thread_recebe;
@@ -83,7 +92,7 @@ int main(void) {
     if(pthread_create(&thread_envia, NULL, thread_enviada, (void*) &(jogadores[i])) != 0) return 1;
     if(pthread_create(&thread_recebe, NULL, thread_recebida, (void*) &(jogadores[i])) != 0) return 1;
   }
-  printf("oi\n");
+  
 
   int turno_atual = 0;
   for(;;){
