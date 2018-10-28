@@ -1,7 +1,7 @@
-#include<stdio.h> 
-#include<string.h>    
-#include<sys/socket.h>    
-#include<arpa/inet.h> 
+#include<stdio.h>
+#include<string.h>
+#include<sys/socket.h>
+#include<arpa/inet.h>
 #include<unistd.h>
 #include<stdlib.h>
 
@@ -12,8 +12,8 @@ typedef struct {
 
 Carta *cartas;
 
-int main(int argc , char *argv[])
-{
+int main(int argc , char *argv[]){
+
     int sock;
     struct sockaddr_in server;
     char *message , *server_reply;
@@ -25,33 +25,32 @@ int main(int argc , char *argv[])
 
     int id_jogador = atoi(id);
     cartas = (Carta*)malloc(3 * sizeof(Carta));
-   
+
     sock = socket(AF_INET , SOCK_STREAM , 0);
-    if (sock == -1)
-    {
+    if (sock == -1){
+
         printf("Nao foi possivel criar o socket");
     }
     puts("Socket criado");
-     
+
     server.sin_addr.s_addr = inet_addr("127.0.0.1");
     server.sin_family = AF_INET;
     server.sin_port = htons( 8081 );
- 
-   
-    if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0)
-    {
+
+
+    if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0){
         perror("Erro, falha na conexao");
         return 1;
     }
-     
+
     puts("Conectado\n");
-     
+
     int primeiro_turno = 1;
-    
-    while(1)
-    {
+
+    while(1){
+
         if( (recv(sock , server_reply , 2000 , 0) < 0) && primeiro_turno == 1){
-            puts("falha ao receber msg");
+            puts("Falha ao receber mensagem");
             break;
         }
         puts("Cartas: ");
@@ -59,11 +58,11 @@ int main(int argc , char *argv[])
         server_reply = calloc(sizeof(char), 2000);
 
 
-        
+
         for(;id_jogador > 0; id_jogador --) {
-            
+
             if( recv(sock , server_reply , 2000 , 0) < 0){
-                puts("falha ao receber msg");
+                puts("Falha ao receber mensagem");
                 break;
             }
             puts("Carta jogada:");
@@ -74,18 +73,17 @@ int main(int argc , char *argv[])
 
         printf("Escolha uma carta: ");
         fgets(message, 1000, stdin );
-        
-      
-        if( send(sock , message , strlen(message) , 0) < 0)
-        {
-            puts("falha ao enviar");
+
+
+        if(send(sock , message , strlen(message) , 0) < 0){
+            puts("Falha ao enviar");
             return 1;
         }
-         
+
         id_jogador = 3;
         primeiro_turno = 0;
     }
-     
+
     close(sock);
     return 0;
 }
