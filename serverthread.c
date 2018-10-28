@@ -220,19 +220,12 @@ void *connection_handler(void *socket_desc)
     }
 
     
-
-    
-    
-    //printf("teste server %s\n", client_message);
-
-
-
-
     //Receive a message from client
     while( (read_size = recv(sock , client_message , 2000 , 0)) > 0 )
     {
         //printf("teste 1 server %s\n", client_message);
         //Send the message back to client
+
         for(int i = 0 ; i < 4 ; i++){
 
             write(client_sock[i] , client_message , strlen(client_message));

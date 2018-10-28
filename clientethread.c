@@ -1,10 +1,7 @@
-/*
-    C ECHO client example using sockets
-*/
-#include<stdio.h> //printf
-#include<string.h>    //strlen
-#include<sys/socket.h>    //socket
-#include<arpa/inet.h> //inet_addr
+#include<stdio.h> 
+#include<string.h>    
+#include<sys/socket.h>    
+#include<arpa/inet.h> 
 #include<unistd.h>
 #include<stdlib.h>
 
@@ -23,74 +20,67 @@ int main(int argc , char *argv[])
     server_reply = calloc(sizeof(char), 2000);
     message = malloc(1000 * sizeof(char));
     char *id = malloc(3 * sizeof(char));
-    printf("digite id de jogador: \n");
+    printf("Digite id de jogador: \n");
     fgets(id, 3, stdin);
 
     int id_jogador = atoi(id);
     cartas = (Carta*)malloc(3 * sizeof(Carta));
-    //Create socket
+   
     sock = socket(AF_INET , SOCK_STREAM , 0);
     if (sock == -1)
     {
-        printf("Could not create socket");
+        printf("Nao foi possivel criar o socket");
     }
-    puts("Socket created");
+    puts("Socket criado");
      
     server.sin_addr.s_addr = inet_addr("127.0.0.1");
     server.sin_family = AF_INET;
     server.sin_port = htons( 8080 );
  
-    //Connect to remote server
+   
     if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0)
     {
-        perror("connect failed. Error");
+        perror("Erro, falha na conexao");
         return 1;
     }
      
-    puts("Connected\n");
+    puts("Conectado\n");
      
     int primeiro_turno = 1;
-    //keep communicating with server
+    
     while(1)
     {
         if( (recv(sock , server_reply , 2000 , 0) < 0) && primeiro_turno == 1){
-            puts("recv failed");
+            puts("falha ao receber msg");
             break;
         }
-        puts("cartas: ");
+        puts("Cartas: ");
         puts(server_reply);
         server_reply = calloc(sizeof(char), 2000);
 
 
         
         for(;id_jogador > 0; id_jogador --) {
-            //Receive a reply from the server
+            
             if( recv(sock , server_reply , 2000 , 0) < 0){
-                puts("recv failed");
+                puts("falha ao receber msg");
                 break;
             }
-            puts("Server reply :");
+            puts("Carta jogada:");
             puts(server_reply);
             server_reply = calloc(sizeof(char), 2000);
         }
 
 
-        printf("Enter message : ");
+        printf("Escolha uma carta: ");
         fgets(message, 1000, stdin );
         
-        //Send some data
+      
         if( send(sock , message , strlen(message) , 0) < 0)
         {
-            puts("Send failed");
+            puts("falha ao enviar");
             return 1;
         }
-         
-        // //Receive a reply from the server
-        // if( recv(sock , server_reply , 2000 , 0) < 0)
-        // {
-        //     puts("recv failed");
-        //     break;
-        // }
          
         id_jogador = 3;
         primeiro_turno = 0;
