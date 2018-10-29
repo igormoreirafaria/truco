@@ -35,7 +35,7 @@ int main(int argc , char *argv[]){
 
     server.sin_addr.s_addr = inet_addr("127.0.0.1"); //configura qual servidor
     server.sin_family = AF_INET;                     //havera a conexao
-    server.sin_port = htons( 8081 );
+    server.sin_port = htons( 8080 );
 
 
     if (connect(sock , (struct sockaddr *)&server , sizeof(server)) < 0){ //tenta conectar 

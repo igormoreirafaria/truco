@@ -32,7 +32,7 @@ int main(int argc , char *argv[]){
     //criacao do servidor
     server.sin_family = AF_INET;
     server.sin_addr.s_addr = INADDR_ANY;
-    server.sin_port = htons( 8081 );
+    server.sin_port = htons( 8080 );
 
     //ligando o socket ao servidor
     if( bind(socket_desc,(struct sockaddr *)&server , sizeof(server)) < 0){
@@ -168,10 +168,13 @@ int check_recursivo(Carta *baralho){
 void *nova_conexao(void *socket_desc){
     int sock = *(int*)socket_desc; //atrinui o socket para comunicar com o cliente à variavel sock
     int read_size;
+    
     char *messagem , *menssagem_cliente, **cartas_cliente; //variaveis que serao utilizadas na troca de mensagens
+    
     messagem = calloc(sizeof(char), 2000);
     menssagem_cliente = calloc(sizeof(char), 2000);
     cartas_cliente = malloc(4 * sizeof(char*));
+   
     for(int i = 0 ; i < 4 ; i++){
         cartas_cliente[i] =  malloc(2000 * sizeof(char));
     }
@@ -241,6 +244,8 @@ void *nova_conexao(void *socket_desc){
             }else if(dupla == 2){       //atribução de pontos se a dupla 2 vencer
                 dupla2 = dupla2 + 2;
             }
+            printf("Dupla 1: %d pontos\n", dupla1 );
+            printf("Dupla 2: %d pontos\n", dupla2 );
             cont = 0; //zera o conador para uma nova rodada
         }
     }
